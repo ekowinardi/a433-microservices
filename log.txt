@@ -1,193 +1,97 @@
-    1  sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
-    2  docker -V
-    3  docker -v
-    4  docker images
-    5  sudo usermod -aG docker lkscloud
-    6  su lkscloud
-    7  id
-    8  docker images
-    9  sudo apt-get update && sudo apt-get upgrade
-   10  docker
-   11  # Add Docker's official GPG key:
-   12  sudo apt-get update
-   13  sudo apt-get install ca-certificates curl gnupg
-   14  sudo install -m 0755 -d /etc/apt/keyrings
-   15  curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-   16  sudo chmod a+r /etc/apt/keyrings/docker.gpg
-   17  # Add the repository to Apt sources:
-   18  echo   "deb [arch="$(dpkg --print-architecture)" signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-   19    "$(. /etc/os-release && echo "$VERSION_CODENAME")" stable" |   sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-   20  sudo apt-get update
-   21  sudo apt update
-   22  ls
-   23  sudo apt install ./docker-desktop-4.25.0-amd64.deb 
-   24  git --version
-   25  sudo apt install git
-   26  git --version 
-   27  sudo apt install ./code_1.84.1-1699275408_amd64.deb 
-   28  docker build -t todo-app:v1 .
-   29  cd a433-microservices/
-   30  docker build -t todo-app:v1 .
-   31  ls
-   32  docker run -dp 3000:3000 --name todo-app todo-app:v1
-   33  docker build -t todo-app:v2 .
-   34  docker rm -f todo-app
-   35  docker run -dp 3000:3000 --name todo-app todo-app:v2
-   36  docker volume create todo-db
-   37  docker rm -f todo-app
-   38  docker run -dp 3000:3000 --name todo-app -v todo-db:/etc/todos todo-app:v2
-   39  docker rm -f todo-app
-   40  docker run -dp 3000:3000 --name todo-app -v todo-db:/etc/todos todo-app:v2
-   41  docker rm -f todo-app
-   42  docker network create todo-app
-   43  docker run -d      --name mysql-db \
-   44  docker exec -it mysql-db mysql -u root -p
-   45  docker run -dp 3000:3000 --name todo-app -w /app -v "$(pwd):/app" \
-   46  docker run -dp 3000:3000 --name todo-app 
-   47  docker run -dp 3000:3000 --name todo-app -w /app -v "$(pwd):/app" --network todo-app  -e MYSQL_HOST=mysql -e MYSQL_USER=root  -e MYSQL_PASSWORD=dicoding   -e MYSQL_DB=todo-db node:12-alpine sh -c "yarn install && yarn run dev"
-   48  docker exec -it mysql-db mysql -u root -p
-   49  docker run -dp 3000:3000 --name todo-app -w /app -v "$(pwd):/app" --network todo-app  -e MYSQL_HOST=mysql -e MYSQL_USER=root  -e MYSQL_PASSWORD=dicoding   -e MYSQL_DB=todo-db node:12-alpine sh -c "yarn install && yarn run dev"
-   50  ls
-   51  FROM node:12-alpine
-   52  RUN apk add --no-cache python2 g++ make
-   53  WORKDIR /app
-   54  COPY . .
-   55  RUN yarn install --production
-   56  CMD ["node", "src/index.js"]
-   57  EXPOSE 3000
-   58  docker build -t todo-app:v1 .
-   59  docker run -dp 3000:3000 --name todo-app todo-app:v1
-   60  docker build -t todo-app:v2 .
-   61  docker rm -f todo-app
-   62  docker run -dp 3000:3000 --name todo-app todo-app:v2
-   63  docker volume create todo-db
-   64  docker rm -f todo-app
-   65  docker run -dp 3000:3000 --name todo-app -v todo-db:/etc/todos todo-app:v2
-   66  docker rm -f todo-app
-   67  docker network create todo-app
-   68  docker network ls
-   69  docker run -d --name mysql-db \
-   70  docker run -d --name mysql-db --network todo-app --network-alias mysql -v todo-mysql-data:/var/lib/mysql  -e MYSQL_ROOT_PASSWORD=dicoding  -e MYSQL_DATABASE=todo-db mysql:5.7
-   71  docker exec -it mysql-db mysql -u root -p
-   72  docker run -dp 3000:3000 --name todo-app -w /app -v "$(pwd):/app" --network todo-app -e MYSQL_HOST=mysql -e MYSQL_USER=root  -e MYSQL_PASSWORD=dicoding -e MYSQL_DB=todo-db  node:12-alpine sh -c "yarn install && yarn run dev"
-   73  docker logs todo-app 
-   74  yarn install v1.22.18
-   75  sudo apt install cmdtest
-   76  docker logs todo-app 
-   77  yarn install v1.22.18
-   78  ocker logs todo-app 
-   79  docker logs todo-app 
-   80  docker logs todo-app yarn install v1.22.18
-   81  yarn install v1.22.18
-   82  docker logs todo-app 
-   83  yarn install v1.22.18
-   84  ocker exec -it mysql-db mysql -p todo-db
-   85  docker exec -it mysql-db mysql -p todo-db
-   86  docker rm -f todo-app mysql-db && docker volume rm todo-db todo-mysql-data && docker network rm todo-app && docker image rm todo-app:v1 todo-app:v2 mysql:5.7 node:12-alpine
-   87  docker compose up -d
-   88  docker compose down --volumes
-   89  docker run -d -p 5000:5000 --restart=always --name registry registry:2
-   90  docker run -d --name my-nginx -p 80:80 nginx
-   91  nano index.html
-   92  docker cp index.html my-nginx:/usr/share/nginx/html 
-   93  docker commit my-nginx nginx-hello-world
-   94  docker tag nginx-hello-world localhost:5000/nginx-hello-world
-   95  docker images
-   96  docker push localhost:5000/nginx-hello-world
-   97  curl -X GET http://localhost:5000/v2/_catalog
-   98  docker stop my-nginx && docker container rm my-nginx && docker image rm nginx-hello-world localhost:5000/nginx-hello-world 
-   99  docker run -d --name my-nginx -p 80:80 localhost:5000/nginx-hello-world
-  100  docker container stop registry my-nginx && docker container rm -v registry my-nginx
-  101  docker images 
-  102  docker tag localhost:5000/nginx-hello-world:latest bagaswinardi/nginx-hello-world:v1
-  103  docker images 
-  104  gpg --generate-key
-  105  pass init 248EC2FAF514DD5FA03AC71D1E284682954023E7
-  106  docker push bagaswinardi/nginx-hello-world:v1
-  107  docker image rm bagaswinardi/nginx-hello-world:v1 localhost:5000/nginx-hello-world:latest
-  108  docker run -d --name my-nginx -p 80:80 bagaswinardi/nginx-hello-world:v1
-  109  docker stop my-nginx && docker container rm my-nginx && docker image rm fikrihelmi17/nginx-hello-world:v1
-  110  docker stop my-nginx && docker container rm my-nginx && docker image rm bagaswinardi/nginx-hello-world:v1
-  111  docker stop nginx && docker container rm nginx && docker image rm bagaswinardi/nginx-hello-world:v1
-  112  docker stop my_nginx && docker container rm my_nginx && docker image rm bagaswinardi/nginx-hello-world:v1
-  113  ls 
-  114  cd Documents/
-  115  ls
-  116  mkdir latdocker 
-  117  cd latdocker/
-  118  ls 
-  119  git clone -b todo-app https://github.com/dicodingacademy/a433-microservices.git
-  120  ls
-  121  ifconfig
-  122  sudo apt install net-tools
-  123  sudo apt update
-  124  sudo apt install update
-  125  ping 8.8.8.8
-  126  sudo apt update
-  127  sudo apt install net-tools
-  128  ifconfig
-  129  docker compose version
-  130  cd a433-microservices/
-  131  docker logs todo-app yarn install v1.22.18
-  132  d ..
-  133  cd ..
-  134  git clone -b proyek-pertama https://github.com/ekowinardi/a433-microservices.git proyek-pertama
-  135  ls
-  136  cd proyek-pertama/
-  137  ls
-  138  code .
-  139  docker login 
-  140  docker login -u bagaswinardi
-  141  export PASSWORD_DOCKER_HUB=<password_Anda>export PASSWORD_DOCKER_HUB=<password_Anda>export PASSWORD_DOCKER_HUB=<password_Anda>export PASSWORD_DOCKER_HUB=<password_Andakkkhhhhccccc
-  142  export PASSWORD_DOCKER_HUB=<password_Anda>export PASSWORD_DOCKER_HUB=<password_Anda>export PASSWORD_DOCKER_HUB=<password_Anda>
-  143  export PASSWORD_DOCKER_HUB=<password_Anda>
-  144  cd ..
-  145  ls
-  146  ls 
-  147  cd Documents/
-  148  ls
-  149  cd proyek-pertama/
-  150  ls
-  151  export PASSWORD_DOCKER_HUB=Rahasia@2017
-  152  ls
-  153  chmod +x build_push_image.sh 
-  154  ./build_push_image.sh 
-  155  sudo chmod +x build_push_image.sh 
-  156  ./build_push_image.sh 
-  157  ls 
-  158  cd Documents/
-  159  ls
-  160  cd proyek-pertama/
-  161  ls
-  162  docker compose up
-  163  ls 
-  164  cd Documents/
-  165  ls
-  166  cd proyek-pertama/
-  167  ls
-  168  sudo chmod +x build_push_image.sh 
-  169  ./build_push_image.sh 
-  170  code .
-  171  export PASSWORD_DOCKER_HUB=rahasia@2017
-  172  ./build_push_image.sh 
-  173  reboot
-  174  cd Documents/
-  175  ls
-  176  cd proyek-pertama/
-  177  ls
-  178  docker compose up
-  179  ls
-  180  ./build_push_image.sh 
-  181  export PASSWORD_DOCKER_HUB=rahasia@2017
-  182  ./build_push_image.sh 
-  183  docker compose up
-  184  export PAT=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
-  185  ./build_push_image.sh 
-  186  export PAT=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
-  187  ./build_push_image.sh 
-  188  code .
-  189  export PAT=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
-  190  ./build_push_image.sh 
-  191  export PAT=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
-  192  ./build_push_image.sh 
-  193  touch log.txt
+[+] Building 0.0s (0/0)                                    docker:desktop-linux
+[+] Running 2/0
+ ✔ Container proyek-pertama-item-db-1   Created                            0.0s 
+ ✔ Container proyek-pertama-item-app-1  Created                            0.0s 
+Attaching to proyek-pertama-item-app-1, proyek-pertama-item-db-1
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten] MongoDB starting : pid=1 port=27017 dbpath=/data/db 64-bit host=63ebb9e68523
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten] db version v3.6.23
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten] git version: d352e6a4764659e0d0350ce77279de3c1f243e5c
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten] OpenSSL version: OpenSSL 1.0.2g  1 Mar 2016
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten] allocator: tcmalloc
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten] modules: none
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten] build environment:
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten]     distmod: ubuntu1604
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten]     distarch: x86_64
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten]     target_arch: x86_64
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I CONTROL  [initandlisten] options: { net: { bindIpAll: true } }
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I -        [initandlisten] Detected data files in /data/db created by the 'wiredTiger' storage engine, so setting the active storage engine to 'wiredTiger'.
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I STORAGE  [initandlisten] 
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I STORAGE  [initandlisten] ** WARNING: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I STORAGE  [initandlisten] **          See http://dochub.mongodb.org/core/prodnotes-filesystem
+proyek-pertama-item-db-1   | 2023-11-27T06:12:57.705+0000 I STORAGE  [initandlisten] wiredtiger_open config: create,cache_size=426M,cache_overflow=(file_max=0M),session_max=20000,eviction=(threads_min=4,threads_max=4),config_base=false,statistics=(fast),compatibility=(release="3.0",require_max="3.0"),log=(enabled=true,archive=true,path=journal,compressor=snappy),file_manager=(close_idle_time=100000),statistics_log=(wait=0),verbose=(recovery_progress),
+proyek-pertama-item-db-1   | 2023-11-27T06:12:58.476+0000 I STORAGE  [initandlisten] WiredTiger message [1701065578:476368][1:0x7fd38c2e2a40], txn-recover: Main recovery loop: starting at 8/8448
+proyek-pertama-item-db-1   | 2023-11-27T06:12:58.557+0000 I STORAGE  [initandlisten] WiredTiger message [1701065578:557215][1:0x7fd38c2e2a40], txn-recover: Recovering log 8 through 9
+proyek-pertama-item-db-1   | 2023-11-27T06:12:58.711+0000 I STORAGE  [initandlisten] WiredTiger message [1701065578:711001][1:0x7fd38c2e2a40], txn-recover: Recovering log 9 through 9
+proyek-pertama-item-db-1   | 2023-11-27T06:12:58.764+0000 I STORAGE  [initandlisten] WiredTiger message [1701065578:764890][1:0x7fd38c2e2a40], txn-recover: Set global recovery timestamp: 0
+proyek-pertama-item-app-1  | 
+proyek-pertama-item-app-1  | > docker-software-delivery@1.0.0 start /app
+proyek-pertama-item-app-1  | > node ./bin/www
+proyek-pertama-item-app-1  | 
+proyek-pertama-item-app-1  | NODE_ENV: production
+proyek-pertama-item-app-1  | /app/node_modules/mongodb/lib/mongo_client.js:421
+proyek-pertama-item-app-1  |           throw err
+proyek-pertama-item-app-1  |           ^
+proyek-pertama-item-app-1  | 
+proyek-pertama-item-app-1  | AssertionError [ERR_ASSERTION]: null == Error [MongoError]: failed to connect to server [item-db:27017] on first connect [Error: connect ECONNREFUSED 172.18.0.2:27017
+proyek-pertama-item-app-1  |     at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1159:16) {
+proyek-pertama-item-app-1  |   name: 'MongoError'
+proyek-pertama-item-app-1  | }]
+proyek-pertama-item-app-1  |     at Pool.<anonymous> (/app/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+proyek-pertama-item-app-1  |     at Pool.emit (events.js:400:28)
+proyek-pertama-item-app-1  |     at Connection.<anonymous> (/app/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+proyek-pertama-item-app-1  |     at Object.onceWrapper (events.js:520:26)
+proyek-pertama-item-app-1  |     at Connection.emit (e...
+proyek-pertama-item-app-1  |     at /app/app.js:24:10
+proyek-pertama-item-app-1  |     at connectCallback (/app/node_modules/mongodb/lib/mongo_client.js:527:5)
+proyek-pertama-item-app-1  |     at /app/node_modules/mongodb/lib/mongo_client.js:418:11
+proyek-pertama-item-app-1  |     at processTicksAndRejections (internal/process/task_queues.js:77:11) {
+proyek-pertama-item-app-1  |   generatedMessage: true,
+proyek-pertama-item-app-1  |   code: 'ERR_ASSERTION',
+proyek-pertama-item-app-1  |   actual: null,
+proyek-pertama-item-app-1  |   expected: Error [MongoError]: failed to connect to server [item-db:27017] on first connect [Error: connect ECONNREFUSED 172.18.0.2:27017
+proyek-pertama-item-app-1  |       at TCPConnectWrap.afterConnect [as oncomplete] (net.js:1159:16) {
+proyek-pertama-item-app-1  |     name: 'MongoError'
+proyek-pertama-item-app-1  |   }]
+proyek-pertama-item-app-1  |       at Pool.<anonymous> (/app/node_modules/mongodb-core/lib/topologies/server.js:336:35)
+proyek-pertama-item-app-1  |       at Pool.emit (events.js:400:28)
+proyek-pertama-item-app-1  |       at Connection.<anonymous> (/app/node_modules/mongodb-core/lib/connection/pool.js:280:12)
+proyek-pertama-item-app-1  |       at Object.onceWrapper (events.js:520:26)
+proyek-pertama-item-app-1  |       at Connection.emit (events.js:400:28)
+proyek-pertama-item-app-1  |       at Socket.<anonymous> (/app/node_modules/mongodb-core/lib/connection/connection.js:189:49)
+proyek-pertama-item-app-1  |       at Object.onceWrapper (events.js:520:26)
+proyek-pertama-item-app-1  |       at Socket.emit (events.js:400:28)
+proyek-pertama-item-app-1  |       at emitErrorNT (internal/streams/destroy.js:106:8)
+proyek-pertama-item-app-1  |       at emitErrorCloseNT (internal/streams/destroy.js:74:3),
+proyek-pertama-item-app-1  |   operator: '=='
+proyek-pertama-item-app-1  | }
+proyek-pertama-item-app-1  | npm ERR! code ELIFECYCLE
+proyek-pertama-item-app-1  | npm ERR! errno 1
+proyek-pertama-item-app-1  | npm ERR! docker-software-delivery@1.0.0 start: `node ./bin/www`
+proyek-pertama-item-app-1  | npm ERR! Exit status 1
+proyek-pertama-item-app-1  | npm ERR! 
+proyek-pertama-item-app-1  | npm ERR! Failed at the docker-software-delivery@1.0.0 start script.
+proyek-pertama-item-app-1  | npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+proyek-pertama-item-app-1  | 
+proyek-pertama-item-app-1  | npm ERR! A complete log of this run can be found in:
+proyek-pertama-item-app-1  | npm ERR!     /root/.npm/_logs/2023-11-27T06_12_59_176Z-debug.log
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.320+0000 I CONTROL  [initandlisten] 
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.321+0000 I CONTROL  [initandlisten] ** WARNING: Access control is not enabled for the database.
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.321+0000 I CONTROL  [initandlisten] **          Read and write access to data and configuration is unrestricted.
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.321+0000 I CONTROL  [initandlisten] 
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.321+0000 I CONTROL  [initandlisten] 
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.321+0000 I CONTROL  [initandlisten] ** WARNING: /sys/kernel/mm/transparent_hugepage/enabled is 'always'.
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.321+0000 I CONTROL  [initandlisten] **        We suggest setting it to 'never'
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.321+0000 I CONTROL  [initandlisten] 
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.339+0000 I FTDC     [initandlisten] Initializing full-time diagnostic data capture with directory '/data/db/diagnostic.data'
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.341+0000 I NETWORK  [initandlisten] listening via socket bound to 0.0.0.0
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.341+0000 I NETWORK  [initandlisten] listening via socket bound to /tmp/mongodb-27017.sock
+proyek-pertama-item-db-1   | 2023-11-27T06:12:59.341+0000 I NETWORK  [initandlisten] waiting for connections on port 27017
+proyek-pertama-item-app-1 exited with code 0
+proyek-pertama-item-app-1  | 
+proyek-pertama-item-app-1  | > docker-software-delivery@1.0.0 start /app
+proyek-pertama-item-app-1  | > node ./bin/www
+proyek-pertama-item-app-1  | 
+proyek-pertama-item-app-1  | NODE_ENV: production
+proyek-pertama-item-db-1   | 2023-11-27T06:13:01.525+0000 I NETWORK  [listener] connection accepted from 172.18.0.3:45974 #1 (1 connection now open)
+proyek-pertama-item-db-1   | 2023-11-27T06:13:01.529+0000 I NETWORK  [conn1] received client metadata from 172.18.0.3:45974 conn1: { driver: { name: "nodejs", version: "2.2.36" }, os: { type: "Linux", name: "linux", architecture: "x64", version: "6.4.16-linuxkit" }, platform: "Node.js v14.21.3, LE, mongodb-core: 2.1.20" }
+proyek-pertama-item-app-1  | Connected to database
