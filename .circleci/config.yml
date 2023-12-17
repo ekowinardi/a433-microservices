@@ -1,8 +1,7 @@
 version: 2.1
 
 orbs:
-    docker: circleci/docker@2.2.0
-    go: circleci/go@1.7.3
+  docker: circleci/docker@2.2.0
     
 # Define the jobs we want to run for this project
 jobs:
@@ -17,7 +16,7 @@ jobs:
           name: Build Docker Image 
           command: docker build -t $IMAGE_NAME:latest .
       - run:
-          name: Publish Docker Image to Github Container registry
+          name: Publish Docker Image to Github Container Registry
           command: |
             echo "$CR_PAT" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
             docker push $IMAGE_NAME:latest
