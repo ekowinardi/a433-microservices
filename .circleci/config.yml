@@ -8,7 +8,7 @@ jobs:
   build-app-karsajobs-ui: 
     executor: docker/docker
     environment: 
-        IMAGE_NAME: ghcr.io/bagaswinardi/karsajobs-ui
+      IMAGE_NAME: ghcr.io/bagaswinardi/karsajobs-ui
     steps: 
       - checkout
       - setup_remote_docker
