@@ -1,46 +1,53 @@
 version: 2.1
-
-orbs:
-  docker: circleci/docker@2.2.0
-  go: circleci/go@1.7.3
-    
-# Define the jobs we want to run for this project
 jobs:
-  test-app: 
-    executor: 
-      name: go/default
-      tag: '1.15'
-    steps: 
-      - checkout
-      - run: 
-          name: Run Unit Tests
-          command: go test -v -short --count=1 $(go list ./...)
-  
+  lint-dockerfile:
+    docker:
+    - image: public.ecr.aws/docker/library/alpine:latest
+    steps:
+    - checkout
+    - run:
+        name: Lint Dockerfile
+        command: |
+          apk add --no-cache wget
+          wget https://github.com/hadolint/hadolint/releases/download/v2.12.0/hadolint-Linux-x86_64 -O /usr/bin/hadolint
+          chmod +x /usr/bin/hadolint
+          hadolint Dockerfile
+  test-app:
+    docker:
+    - image: public.ecr.aws/docker/library/golang:latest
+    working_directory: /go/src/github.com/V4nD3Grac3/a433-microservices/tree/karsajobs
+    steps:
+    - checkout
+    - run:
+        name: test backend
+        command: |
+          apt update
+          apt install -y build-essential
+          go test -v -short --count=1 $(go list ./...)
+
   build-app-karsajobs:
-    executor: docker/docker
-    environment: 
-      IMAGE_NAME: ghcr.io/bagaswinardi/karsajobs
-    steps: 
-      - checkout
-      - setup_remote_docker
-      - run: 
-          name: Build Docker Image 
-          command: docker build -t $IMAGE_NAME:latest .
-      - run:
-          name: Publish Docker Image to Github Container Registry
-          command: |
-            echo "$CR_PAT" | docker login ghcr.io -u "$GHCR_USERNAME" --password-stdin
-            docker push $IMAGE_NAME:latest
+    docker:
+    - image: public.ecr.aws/docker/library/docker:24.0.7-dind
+    steps:
+    - checkout
+    - setup_remote_docker
+    - run:
+        name: Build and Push Docker Image
+        command: |
+          set -x
+          docker build -t $GH_REPO_BACKEND:$TAG .
+          echo $GH_TOKEN | docker login ghcr.io -u $GH_USER --password-stdin
+          docker push $GH_REPO_BACKEND:$TAG
 
-workflows: 
-  ci: 
-    jobs: 
-      - docker/hadolint: 
-          dockerfiles: './Dockerfile'
-      - test-app
-      - build-app-karsajobs: 
-          requires: 
-            - docker/hadolint 
-            - test-app
-
+workflows:
+  version: 2
+  lint-test-build:
+    jobs:
+    - lint-dockerfile
+    - test-app:
+        requires:
+        - lint-dockerfile
+    - build-app-karsajobs:
+        requires:
+        - test-app
     
