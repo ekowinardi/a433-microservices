@@ -1,0 +1,5 @@
+https://hub.docker.com/repository/docker/bagaswinardi/karsajobs/general
+https://hub.docker.com/repository/docker/bagaswinardi/karsajobs-ui/general
+
+https://github.com/ekowinardi/a433-microservices/pkgs/container/karsajobs-ui
+https://github.com/users/ekowinardi/packages/container/package/karsajobs
